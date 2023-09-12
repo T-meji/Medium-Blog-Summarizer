@@ -7,7 +7,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.vectorstores import Pinecone
 
 if os.path.exists("env.py"):
-    import os
+    import env
 
 pinecone.init(api_key=os.environ.get("PINECONE_SECRET_KEY"),
               environment=os.environ.get("PINECONE_ENVIRONMENT_REGION")
@@ -15,7 +15,7 @@ pinecone.init(api_key=os.environ.get("PINECONE_SECRET_KEY"),
 
 
 def ingest_text():
-    loader = TextLoader("medium_blog.txt")
+    loader = TextLoader("medium_blog.txt", encoding="utf-8")
     raw_text = loader.load()
     print("Loaded text")
 
@@ -28,9 +28,9 @@ def ingest_text():
     documents = text_splitter.split_documents(raw_text)
     print("Split documents into {len(documents)} chunks.")
 
-    embeddings = OpenAIEmbeddings()
-    Pinecone.from_documents(documents=documents, embedding=embeddings, index_name="medium-txt-db")
+    embeddings = OpenAIEmbeddings(openai_api_key=os.environ.get("OPENAI_API_KEY"))
+    Pinecone.from_documents(documents=documents, embedding=embeddings, index_name="medium-text-db")
     print("Successfully loaded vectors into Pinecone. ")
 
-    if __name__ == "__main__":
-        ingest_text()
+if __name__ == "__main__":
+    ingest_text()

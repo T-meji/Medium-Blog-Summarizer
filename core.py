@@ -12,10 +12,10 @@ pinecone.init(api_key=os.environ.get("PINECONE_SECRET_KEY"),
               environment=os.environ.get("PINECONE_ENVIRONMENT_REGION")
               )
 def run_llm(query: str):
-    embeddings = OpenAIEmbeddings
+    embeddings = OpenAIEmbeddings()
 
     doc_search = Pinecone.from_existing_index(
-        index_name="medium-txt-db",
+        index_name="medium-text-db",
         embedding=embeddings
     )
 
